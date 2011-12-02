@@ -11,7 +11,6 @@
 #include "cinder/gl/gl.h"
 #include "cinder/app/AppBasic.h"
 
-
 using namespace ci;
 using namespace ci::app;
 
@@ -19,62 +18,64 @@ Particle::Particle()
 {
 }
 
-Particle::Particle( Vec2f loc )
+Particle::Particle( Vec2f loc, Vec2f vel )
 {
 	mLoc	= loc;
 	mDir	= Rand::randVec2f();
-	mVel	= Rand::randFloat( 5.0f );
-	//mRadius	= Rand::randFloat( 1.0f, 5.0f );
-	//mRadius	= cos( mLoc.y * 0.1f ) + sin( mLoc.x * 0.1f ) + 2.0f;
-    //mRadius = ( sin( mLoc.y * mLoc.x ) + 1.0f ) * 2.0f;
+
     mScale = 6.0f;
+    
+    mAge = 0;
+    mLifeSpan = Rand::randInt( 50, 200 );
+    mIsDead = false;
+    //mDecay = 0.9999f;
+    
+    mVel = vel;
 }
 
-void Particle::update( const Channel32f &channel,  const ci::Channel32f &rChan, const ci::Channel32f &gChan, const ci::Channel32f &bChan, const ci::Vec2i &mouseLoc )
+void Particle::update( const Perlin &perlin, const Channel32f &channel,  const Channel32f &rChan, const Channel32f &gChan, const Channel32f &bChan, const Vec2i &mouseLoc )
 {
-	
-    //calculate the vector that points from the particl to the mouse.
-    mDirToCursor = mouseLoc - mLoc;
-    mDirToCursor.safeNormalize(); //normalize it so it gives us a unit vector.
+   
+    
+    mAge++;
+    if( mAge > mLifeSpan ){
+        mIsDead = true;
+    }
+
+    //make the particle shrink as it ages
+    float agePer = 1.0f - (mAge / (float)mLifeSpan); 
+    mRadius = 3.0f * agePer;
+    
+    // get Perlin noise value based on my location and
+	// elapsed seconds and turn this noise value into an angle.
+	float nX = mLoc.x * 0.005f;
+	float nY = mLoc.y * 0.005f;
+	float nZ = app::getElapsedSeconds() * 0.1f;
+	float noise = perlin.fBm( nX, nY, nZ );
+	float angle = noise * 15.0f;
+	Vec2f noiseVector( cos( angle ), sin( angle ) );
     
     
-    Vec2f newLoc = mLoc + mDirToCursor * 100.f;
-    newLoc.x = constrain( newLoc.x, 0.0f, channel.getWidth() - 1.0f );
-    newLoc.y = constrain( newLoc.y, 0.0f, channel.getHeight() - 1.0f );
+    //mRadius = channel.getValue( mLoc ) * mScale;    
     
+    mVel += noiseVector * 0.2f * ( 1.0f - agePer );
+    mLoc += mVel;
+    //mVel *= mDecay;
     
-    
-    //mRadius = channel.getValue( mLoc ) * mScale;
-    mRadius = channel.getValue( newLoc ) * mScale;
-    
-    Vec2i mLoci = (Vec2i) mLoc;
-        
-    r = rChan.getValue( newLoc );
-    g = gChan.getValue( newLoc );
-    b = bChan.getValue( newLoc );    
-    
-    //console() << r << ", " << g << ", " << b << std::endl;
-    //console() << channel.getValue(mLoc) << std::endl;
-    //console() << "hello" << std::endl;
     
 }
 
 void Particle::draw()
 {
-    //gl::color( Color( 1.0f, 1.0f, 1.0f ));
-    gl::color( Color( r, g, b));    
-    
-    /*
-    float arrowLength = 15.0f;
-    Vec3f p1( mLoc, 0.0f );
-    Vec3f p2( mLoc + mDirToCursor, 0.0f);
-    float headLength = 6.0f;
-    float headRadius = 3.0f;
-    gl::drawVector( p1, p2, headLength, headRadius );
-    */
-     
-//    Rectf rect( mLoc.x, mLoc.y, mLoc.x + mRadius, mLoc.y + mRadius );
-//	gl::drawSolidRect( rect );
-  
-    gl::drawSolidCircle( mLoc + mDirToCursor * 0.2f, mRadius);
+    gl::color( Color( 1.0f, 1.0f, 1.0f ));
+    //gl::color( Color( r, g, b));    
+           
+    //gl::drawSolidCircle( mLoc + mDirToCursor * 0.2f, mRadius);
+    //gl::drawSolidCircle( mLoc, mRadius);
+    gl::drawSolidCircle( mLoc, mRadius );    
+}
+
+bool Particle::isDead()
+{
+    return mIsDead;
 }

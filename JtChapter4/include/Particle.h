@@ -11,19 +11,20 @@
 #include "cinder/Surface.h"
 #include "cinder/Vector.h"
 #include "cinder/Color.h"
-
+#include "cinder/perlin.h"
 #include <vector>
 
 class Particle {
 public:
 	Particle();
-	Particle( ci::Vec2f );
-	void update( const ci::Channel32f &channel, const ci::Channel32f &rChan, const ci::Channel32f &gChan, const ci::Channel32f &bChan, const ci::Vec2i &mouseLoc );
+	Particle( ci::Vec2f, ci::Vec2f );
+	void update( const ci::Perlin &perlin, const ci::Channel32f &channel, const ci::Channel32f &rChan, const ci::Channel32f &gChan, const ci::Channel32f &bChan, const ci::Vec2i &mouseLoc );
 	void draw();
+    bool isDead();
 	
 	ci::Vec2f	mLoc;
 	ci::Vec2f	mDir;
-	float		mVel;
+    ci::Vec2f   mVel;
 	
 	float		mRadius;
     float		mScale;
@@ -35,4 +36,11 @@ public:
     ci::Color   mColor;
     
     ci::Vec2f   mDirToCursor;
+    
+    int mAge;
+    int mLifeSpan;
+    bool mIsDead;
+    float mDecay;
+    
+
 };

@@ -12,6 +12,7 @@
 #include "ParticleController.h"
 
 using namespace ci;
+using namespace ci::app;
 using std::list;
 
 
@@ -25,23 +26,24 @@ ParticleController::ParticleController( int res )
     mXRes = app::getWindowWidth()/res;
     mYRes = app::getWindowHeight()/res;
     
-    for( int y=0; y<mYRes; y++ ){
-        for( int x=0; x<mXRes; x++ ){ 
-            addParticles( x, y, res );
-        }
-    }
 }
 
-void ParticleController::update( const Channel32f &channel, const ci::Surface32f &surface, const Vec2i &mouseLoc )
+void ParticleController::update( const Perlin &perlin, const Channel32f &channel, const ci::Surface32f &surface, const Vec2i &mouseLoc )
 {
     
     Channel32f rChan = surface.getChannelRed();
     Channel32f gChan = surface.getChannelGreen();
     Channel32f bChan = surface.getChannelBlue();    
     
-	for( list<Particle>::iterator p = mParticles.begin(); p != mParticles.end(); ++p ){
-		p->update( channel, rChan, gChan, bChan, mouseLoc );
-	}
+	for( list<Particle>::iterator p = mParticles.begin(); p != mParticles.end(); ){
+        //console() << p->mIsDead << std::endl;
+        if( p->isDead() ) {
+            p = mParticles.erase( p );
+        } else {
+            p->update( perlin, channel, rChan, gChan, bChan, mouseLoc );
+            ++p;
+        }
+    }
 }
 
 void ParticleController::draw()
@@ -51,12 +53,15 @@ void ParticleController::draw()
 	}
 }
 
-void ParticleController::addParticles( int xi, int yi, int res )
+void ParticleController::addParticles( int amt, const Vec2i &mouseLoc, const Vec2f &mouseVel )
 {
-	float x = ( xi + 0.5f ) * (float)res;
-	float y = ( yi + 0.5f ) * (float)res;        
 
-	mParticles.push_back( Particle( Vec2f( x, y ) ) );
+    for( int i=0; i<amt; i++ ){
+        Vec2f loc = mouseLoc + Rand::randVec2f() * 10.0f;
+        Vec2f vel = (mouseVel * 0.25f) + Rand::randVec2f() * Rand::randFloat( 1.0f, 3.0f );        
+        
+        mParticles.push_back( Particle( loc, vel ) );
+    }
 
 }
 

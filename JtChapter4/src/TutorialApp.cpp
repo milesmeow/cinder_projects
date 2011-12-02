@@ -4,9 +4,11 @@
 #include "cinder/gl/Texture.h"
 #include "cinder/Channel.h"
 #include "ParticleController.h"
+#include "cinder/perlin.h"
 
-#define NUM_PARTICLES_TO_SPAWN 25
+#define NUM_PARTICLES_TO_SPAWN 5
 #define RESOLUTION 5
+
 
 
 using namespace ci;
@@ -42,10 +44,13 @@ public:
     bool mRenderParticles;
     
     Vec2i mMouseLoc;
+    Vec2i mPrevMouseLoc;
+    
+    Perlin mPerlin;
     
 };
 
-void TutorialApp::prepareSettings( Settings *settings) {
+void TutorialApp::prepareSettings( Settings *settings ) {
     settings->setWindowSize( 800, 600 );
     settings->setFrameRate( 60.0f );
 }
@@ -62,6 +67,9 @@ void TutorialApp::setup()
     mTexture = gl::Texture( mSurface );
     
     myPController = ParticleController( RESOLUTION );
+    
+    mPrevMouseLoc = Vec2i(0,0);
+    mPerlin = Perlin();
     
 }
 
@@ -83,6 +91,7 @@ void TutorialApp::setup()
 void TutorialApp::mouseDown( MouseEvent event )
 {
     mIsPressed = true;
+    mPrevMouseLoc = event.getPos();
 }
 
 void TutorialApp::mouseUp( MouseEvent event )
@@ -118,10 +127,15 @@ void TutorialApp::update()
     
     
     if( ! mChannel ) return;
-    myPController.update( mChannel, mSurface, mMouseLoc );
+    myPController.update(  mPerlin, mChannel, mSurface, mMouseLoc );
     
     if( mIsPressed ){
-        myPController.addParticles( 5, mMouseLoc );
+        if (!mPrevMouseLoc){
+            mPrevMouseLoc = mMouseLoc;
+        }
+        Vec2f mouseVel = mMouseLoc - mPrevMouseLoc;
+        myPController.addParticles(NUM_PARTICLES_TO_SPAWN, mMouseLoc, mouseVel );
+        mPrevMouseLoc = mMouseLoc;
     }
     
 }

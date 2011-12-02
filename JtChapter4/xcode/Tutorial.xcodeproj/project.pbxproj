@@ -15,9 +15,9 @@
 		00B784B60FF439BC000DE1D7 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B20FF439BC000DE1D7 /* CoreAudio.framework */; };
 		00BAE65A0E7ED9C10018A608 /* TutorialApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 00BAE6590E7ED9C10018A608 /* TutorialApp.cpp */; };
 		00CCAF15116A9FEE008396D5 /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 00CCAF14116A9FEE008396D5 /* CinderApp.icns */; };
-		392A25C4147B489100670A90 /* ParticleController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 392A25C2147B489100670A90 /* ParticleController.cpp */; };
-		392A25C5147B489100670A90 /* Particle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 392A25C3147B489100670A90 /* Particle.cpp */; };
-		392A25C9147B48F000670A90 /* jasmine.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 392A25C8147B48F000670A90 /* jasmine.jpg */; };
+		39B7037C14895F5D005671E8 /* jasmine.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 39B7037B14895F5D005671E8 /* jasmine.jpg */; };
+		39B7037F14895F66005671E8 /* Particle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 39B7037D14895F66005671E8 /* Particle.cpp */; };
+		39B7038014895F66005671E8 /* ParticleController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 39B7037E14895F66005671E8 /* ParticleController.cpp */; };
 		5323E6B20EAFCA74003A9687 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B10EAFCA74003A9687 /* CoreVideo.framework */; };
 		5323E6B60EAFCA7E003A9687 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B50EAFCA7E003A9687 /* QTKit.framework */; };
 		53E3CDFC0E86099300238D2B /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53E3CDFB0E86099300238D2B /* Carbon.framework */; };
@@ -38,11 +38,11 @@
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		32CA4F630368D1EE00C91783 /* Tutorial_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tutorial_Prefix.pch; sourceTree = "<group>"; };
-		392A25C2147B489100670A90 /* ParticleController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ParticleController.cpp; sourceTree = "<group>"; };
-		392A25C3147B489100670A90 /* Particle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Particle.cpp; sourceTree = "<group>"; };
-		392A25C6147B48E200670A90 /* ParticleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParticleController.h; sourceTree = "<group>"; };
-		392A25C7147B48E200670A90 /* Particle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Particle.h; sourceTree = "<group>"; };
-		392A25C8147B48F000670A90 /* jasmine.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = jasmine.jpg; sourceTree = "<group>"; };
+		39B7037914895F31005671E8 /* Particle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Particle.h; path = ../include/Particle.h; sourceTree = "<group>"; };
+		39B7037A14895F31005671E8 /* ParticleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ParticleController.h; path = ../include/ParticleController.h; sourceTree = "<group>"; };
+		39B7037B14895F5D005671E8 /* jasmine.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = jasmine.jpg; path = ../resources/jasmine.jpg; sourceTree = "<group>"; };
+		39B7037D14895F66005671E8 /* Particle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Particle.cpp; path = ../src/Particle.cpp; sourceTree = "<group>"; };
+		39B7037E14895F66005671E8 /* ParticleController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ParticleController.cpp; path = ../src/ParticleController.cpp; sourceTree = "<group>"; };
 		5323E6B10EAFCA74003A9687 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = /System/Library/Frameworks/CoreVideo.framework; sourceTree = "<absolute>"; };
 		5323E6B50EAFCA7E003A9687 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
 		53E3CDFB0E86099300238D2B /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
@@ -74,9 +74,9 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				39B7037D14895F66005671E8 /* Particle.cpp */,
+				39B7037E14895F66005671E8 /* ParticleController.cpp */,
 				00BAE6590E7ED9C10018A608 /* TutorialApp.cpp */,
-				392A25C2147B489100670A90 /* ParticleController.cpp */,
-				392A25C3147B489100670A90 /* Particle.cpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -131,8 +131,8 @@
 		29B97315FDCFA39411CA2CEA /* Headers */ = {
 			isa = PBXGroup;
 			children = (
-				392A25C6147B48E200670A90 /* ParticleController.h */,
-				392A25C7147B48E200670A90 /* Particle.h */,
+				39B7037914895F31005671E8 /* Particle.h */,
+				39B7037A14895F31005671E8 /* ParticleController.h */,
 				32CA4F630368D1EE00C91783 /* Tutorial_Prefix.pch */,
 			);
 			name = Headers;
@@ -141,7 +141,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				392A25C8147B48F000670A90 /* jasmine.jpg */,
+				39B7037B14895F5D005671E8 /* jasmine.jpg */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 				00CCAF14116A9FEE008396D5 /* CinderApp.icns */,
 			);
@@ -205,7 +205,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				00CCAF15116A9FEE008396D5 /* CinderApp.icns in Resources */,
-				392A25C9147B48F000670A90 /* jasmine.jpg in Resources */,
+				39B7037C14895F5D005671E8 /* jasmine.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -217,8 +217,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				00BAE65A0E7ED9C10018A608 /* TutorialApp.cpp in Sources */,
-				392A25C4147B489100670A90 /* ParticleController.cpp in Sources */,
-				392A25C5147B489100670A90 /* Particle.cpp in Sources */,
+				39B7037F14895F66005671E8 /* Particle.cpp in Sources */,
+				39B7038014895F66005671E8 /* ParticleController.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
