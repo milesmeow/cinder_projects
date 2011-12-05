@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   type = "1"
+   version = "1.0">
+   <FileBreakpoints>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "0"
+         filePath = "/Users/jamestu/jt_bits/coding/cinder/git_repo/my_cinder_projects/JtChapter4 /src/TutorialApp.cpp"
+         timestampString = "344545653.457033"
+         startingColumnNumber = "2147483647"
+         endingColumnNumber = "2147483647"
+         startingLineNumber = "134"
+         endingLineNumber = "134"
+         landmarkName = "TutorialApp::update()"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "0"
+         filePath = "/Users/jamestu/jt_bits/coding/cinder/git_repo/my_cinder_projects/JtChapter4 /src/TutorialApp.cpp"
+         timestampString = "344545653.457033"
+         startingColumnNumber = "2147483647"
+         endingColumnNumber = "2147483647"
+         startingLineNumber = "136"
+         endingLineNumber = "136"
+         landmarkName = "TutorialApp::update()"
+         landmarkType = "5">
+      </FileBreakpoint>
+   </FileBreakpoints>
+</Bucket>
