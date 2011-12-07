@@ -6,6 +6,8 @@
 #include "cinder/Vector.h"
 #include "cinder/Utilities.h"
 #include "ParticleController.h"
+#include "cinder/Camera.h"
+#include "cinder/params/Params.h"
 
 #define RESOLUTION 10
 #define NUM_PARTICLES_TO_SPAWN 15
@@ -46,11 +48,20 @@ class TutorialApp : public AppBasic {
 	bool mAllowPerlin;
 	
 	int mSaveFrameCount;
+    
+    CameraPersp mCam;
+    Vec3f mEye;
+    Vec3f mCenter;
+    Vec3f mUp;
+    
+    params::InterfaceGl mParams;
+    Quatf mSceneRotation;
+    float mCameraDistance;
 };
 
 void TutorialApp::prepareSettings( Settings *settings )
 {
-	settings->setWindowSize( 800, 600 );
+	settings->setWindowSize( 1280, 720 );
 	settings->setFrameRate( 60.0f );
 }
 
@@ -72,6 +83,32 @@ void TutorialApp::setup()
 	mAllowPerlin	= false;
 	mSaveFrames		= false;
 	mSaveFrameCount = 0;
+    
+    // Takes four parameters:
+    // (1) foV : the smaller the number the tighter the fustrum (usually between 60.0 and 90.0)
+    // (2) aspect ratio of the application window
+    // (3) near clipping plane
+    // (4) far clipping plane
+    mCam.setPerspective( 60.0f, getWindowAspectRatio(), 5.0f, 3000.0f ); 
+    
+    //define the camera
+    mCameraDistance = 500.0f;
+    mEye    = Vec3f( 0.0f, 0.0f, mCameraDistance ); //position of the camera
+    mCenter = Vec3f::zero(); //the location in 3D space that the camera points at
+    mUp     = Vec3f::yAxis(); //the camera's up direction
+    
+    mCam.lookAt( mEye, mCenter, mUp );
+    gl::setMatrices( mCam );
+    gl::rotate( mSceneRotation );
+    
+    
+    // Initialize the Params object
+    mParams = params::InterfaceGl( "Flocking", Vec2i( 225, 200 ) );
+    // We tell Params that we want it control the mSceneRotation variable...during runtime!
+    // It expects the addr in memory of the variable...that's what & is.
+    // So, it will include an arc-ball in the scene.
+    mParams.addParam( "Scene Rotation", &mSceneRotation );
+    mParams.addParam( "Eye Distance", &mCameraDistance, "min=50.0 max=1000.0 step=50.0 keyIncr=s keyDecr=w" );
 }
 
 
@@ -121,7 +158,8 @@ void TutorialApp::update()
 	if( mIsPressed )
 		mParticleController.addParticles( NUM_PARTICLES_TO_SPAWN, mMouseLoc, mMouseVel );
 	
-	mParticleController.repulseParticles();
+    // Stop repulsing for now.
+	//mParticleController.repulseParticles();
 	
 	if( mCentralGravity )
 		mParticleController.pullToCenter();
