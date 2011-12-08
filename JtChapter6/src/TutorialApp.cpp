@@ -9,8 +9,7 @@
 #include "cinder/Camera.h"
 #include "cinder/params/Params.h"
 
-#define RESOLUTION 10
-#define NUM_PARTICLES_TO_SPAWN 15
+#define NUM_INITIAL_PARTICLES 150
 
 #include <sstream>
 using std::stringstream;
@@ -50,22 +49,19 @@ void TutorialApp::setup()
 
 	mCentralGravity = false;
     
-    // Takes four parameters:
-    // (1) foV : the smaller the number the tighter the fustrum (usually between 60.0 and 90.0)
-    // (2) aspect ratio of the application window
-    // (3) near clipping plane
-    // (4) far clipping plane
-    mCam.setPerspective( 60.0f, getWindowAspectRatio(), 5.0f, 3000.0f ); 
     
     //define the camera
     mCameraDistance = 500.0f;
     mEye    = Vec3f( 0.0f, 0.0f, mCameraDistance ); //position of the camera
     mCenter = Vec3f::zero(); //the location in 3D space that the camera points at
     mUp     = Vec3f::yAxis(); //the camera's up direction
-    
-    mCam.lookAt( mEye, mCenter, mUp );
-    gl::setMatrices( mCam );
-    gl::rotate( mSceneRotation );
+
+    // Takes four parameters:
+    // (1) foV : the smaller the number the tighter the fustrum (usually between 60.0 and 90.0)
+    // (2) aspect ratio of the application window
+    // (3) near clipping plane
+    // (4) far clipping plane
+    mCam.setPerspective( 60.0f, getWindowAspectRatio(), 5.0f, 3000.0f ); 
     
     
     // Initialize the Params object
@@ -75,6 +71,13 @@ void TutorialApp::setup()
     // So, it will include an arc-ball in the scene.
     mParams.addParam( "Scene Rotation", &mSceneRotation );
     mParams.addParam( "Eye Distance", &mCameraDistance, "min=50.0 max=1000.0 step=50.0 keyIncr=s keyDecr=w" );
+    mParams.addParam( "Center Gravity", &mCentralGravity, "keyIncr=g" );
+    
+    
+    // CREATE PARTICLE CONTROLLER
+	mParticleController.addParticles( NUM_INITIAL_PARTICLES );
+
+    
 }
 
 
