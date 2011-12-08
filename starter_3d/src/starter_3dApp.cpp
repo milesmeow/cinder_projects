@@ -53,7 +53,7 @@ void starter_3dApp::setup()
     // (1) Title
     // (2) Size
     // (3) Color, optional.
-    mParams = params::InterfaceGl( "Flocking", Vec2i( 225, 200 ) );
+    mParams = params::InterfaceGl( "Flocking", Vec2i( 225, 200 ), Color(0.0f, 1.0f, 0.0f) );
     
     // We tell Params that we want it control the mSceneRotation variable...during runtime!
     // It expects the addr in memory of the variable...that's what & is.
