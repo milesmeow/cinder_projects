@@ -21,42 +21,22 @@ using namespace ci::app;
 class TutorialApp : public AppBasic {
  public:
 	void prepareSettings( Settings *settings );
-	void keyDown( KeyEvent event );
-	void mouseDown( MouseEvent event );
-	void mouseUp( MouseEvent event );
-	void mouseMove( MouseEvent event );
-	void mouseDrag( MouseEvent event );
 	void setup();
 	void update();
 	void draw();
 	
-	Perlin mPerlin;
-
-	Channel32f mChannel;
-	gl::Texture	mTexture;
+	// PARAMS
+	params::InterfaceGl	mParams;
 	
-	Vec2i mMouseLoc;
-	Vec2f mMouseVel;
-	bool mIsPressed;
+	// CAMERA
+	CameraPersp			mCam;
+	Quatf				mSceneRotation;
+	float				mCameraDistance;
+	Vec3f				mEye, mCenter, mUp;
 	
-	ParticleController mParticleController;
+	ParticleController	mParticleController;
 	
-	bool mDrawParticles;
-	bool mDrawImage;
-	bool mSaveFrames;
-	bool mCentralGravity;
-	bool mAllowPerlin;
-	
-	int mSaveFrameCount;
-    
-    CameraPersp mCam;
-    Vec3f mEye;
-    Vec3f mCenter;
-    Vec3f mUp;
-    
-    params::InterfaceGl mParams;
-    Quatf mSceneRotation;
-    float mCameraDistance;
+	bool				mCentralGravity;
 };
 
 void TutorialApp::prepareSettings( Settings *settings )
@@ -67,22 +47,8 @@ void TutorialApp::prepareSettings( Settings *settings )
 
 void TutorialApp::setup()
 {	
-	mPerlin = Perlin();
-	
-	Url url( "http://libcinder.org/media/tutorial/paris.jpg" );
-	mChannel = Channel32f( loadImage( loadUrl( url ) ) );
-	mTexture = mChannel;
 
-	mMouseLoc = Vec2i( 0, 0 );
-	mMouseVel = Vec2f::zero();
-	
-	mDrawParticles	= true;
-	mDrawImage		= false;
-	mIsPressed		= false;
 	mCentralGravity = false;
-	mAllowPerlin	= false;
-	mSaveFrames		= false;
-	mSaveFrameCount = 0;
     
     // Takes four parameters:
     // (1) foV : the smaller the number the tighter the fustrum (usually between 60.0 and 90.0)
@@ -112,81 +78,36 @@ void TutorialApp::setup()
 }
 
 
-void TutorialApp::mouseDown( MouseEvent event )
-{
-	mIsPressed = true;
-}
-
-void TutorialApp::mouseUp( MouseEvent event )
-{
-	mIsPressed = false;
-}
-
-void TutorialApp::mouseMove( MouseEvent event )
-{
-	mMouseVel = ( event.getPos() - mMouseLoc );
-	mMouseLoc = event.getPos();
-}
-
-void TutorialApp::mouseDrag( MouseEvent event )
-{
-	mouseMove( event );
-}
-
-void TutorialApp::keyDown( KeyEvent event )
-{
-	if( event.getChar() == '1' ){
-		mDrawImage = ! mDrawImage;
-	} else if( event.getChar() == '2' ){
-		mDrawParticles = ! mDrawParticles;
-	}
-	
-	if( event.getChar() == 's' ){
-		mSaveFrames = ! mSaveFrames;
-	} else if( event.getChar() == 'g' ){
-		mCentralGravity = ! mCentralGravity;
-	} else if( event.getChar() == 'p' ){
-		mAllowPerlin = ! mAllowPerlin;
-	}
-}
-
 
 void TutorialApp::update()
 {
-	if( ! mChannel ) return;
-	
-	if( mIsPressed )
-		mParticleController.addParticles( NUM_PARTICLES_TO_SPAWN, mMouseLoc, mMouseVel );
-	
+
     // Stop repulsing for now.
 	//mParticleController.repulseParticles();
+
+    // UPDATE CAMERA
+	mEye = Vec3f( 0.0f, 0.0f, mCameraDistance );
+	mCam.lookAt( mEye, mCenter, mUp );
+	gl::setMatrices( mCam );
+	gl::rotate( mSceneRotation );
 	
-	if( mCentralGravity )
-		mParticleController.pullToCenter();
-		
-	if( mAllowPerlin )
-		mParticleController.applyPerlin( mPerlin );
-		
-	mParticleController.update( mChannel, mMouseLoc );
+	// UPDATE PARTICLE CONTROLLER
+	if( mCentralGravity ) mParticleController.pullToCenter( mCenter );
+	mParticleController.update();
 }
 
 void TutorialApp::draw()
 {	
-	gl::clear( Color( 0, 0, 0 ), true );
+	gl::clear( Color( 0, 0, 0.01f ), true );
+	gl::enableDepthRead();
+	gl::enableDepthWrite();
 	
-	if( mDrawImage ){
-		mTexture.enableAndBind();
-		gl::draw( mTexture, getWindowBounds() );
-	}
+	// DRAW PARTICLES
+	glColor4f( ColorA( 1.0f, 1.0f, 1.0f, 1.0f ) );
+	mParticleController.draw();
 	
-	if( mDrawParticles ){
-		glDisable( GL_TEXTURE_2D );
-		mParticleController.draw();
-	}
-	
-	if( mSaveFrames ){
-		writeImage( getHomeDirectory() + "image_" + toString( getElapsedFrames() ) + ".png", copyWindowSurface() );
-	}
+	// DRAW PARAMS WINDOW
+	params::InterfaceGl::draw();
 }
 
 CINDER_APP_BASIC( TutorialApp, RendererGl )

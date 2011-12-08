@@ -1,30 +1,20 @@
 #pragma once
-#include "cinder/Channel.h"
 #include "cinder/Vector.h"
 #include "cinder/Color.h"
-#include "cinder/Perlin.h"
 #include <vector>
 
 class Particle {
- public:
+public:
 	Particle();
-	Particle( ci::Vec2f, ci::Vec2f );
-	void pullToCenter();
-	void applyPerlin( const ci::Perlin &perlin );
-	void update( const ci::Channel32f &channel, const ci::Vec2i &mouseLoc );
+	Particle( ci::Vec3f, ci::Vec3f );
+	void pullToCenter( const ci::Vec3f &center );
+	void update();
 	void draw();
 	
-	ci::Vec2f	mLoc;
-	ci::Vec2f	mVel;
-	ci::Vec2f	mAcc;
+	ci::Vec3f	mPos;
+	ci::Vec3f	mVel;
+	ci::Vec3f	mAcc;
 	
 	float		mDecay;
-	float		mRadius, mRadiusDest;
-	float		mScale;
-	
-	float		mMass;
-
-	int			mAge;
-	int			mLifespan;
-	bool		mIsDead;
+	float		mRadius;
 };
