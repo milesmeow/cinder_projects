@@ -1,18 +1,12 @@
 #include "cinder/app/AppBasic.h"
-#include "cinder/ImageIO.h"
-#include "cinder/gl/Texture.h"
-#include "cinder/Perlin.h"
-#include "cinder/Channel.h"
 #include "cinder/Vector.h"
 #include "cinder/Utilities.h"
 #include "ParticleController.h"
 #include "cinder/Camera.h"
 #include "cinder/params/Params.h"
 
-#define NUM_INITIAL_PARTICLES 150
-
-#include <sstream>
-using std::stringstream;
+#define NUM_INITIAL_PARTICLES 250
+#define NUM_PARTICLES_TO_SPAWN 15
 
 using namespace ci;
 using namespace ci::app;
@@ -20,6 +14,7 @@ using namespace ci::app;
 class TutorialApp : public AppBasic {
  public:
 	void prepareSettings( Settings *settings );
+	void keyDown( KeyEvent event );
 	void setup();
 	void update();
 	void draw();
@@ -30,12 +25,14 @@ class TutorialApp : public AppBasic {
 	// CAMERA
 	CameraPersp			mCam;
 	Quatf				mSceneRotation;
-	float				mCameraDistance;
 	Vec3f				mEye, mCenter, mUp;
+	float				mCameraDistance;
 	
 	ParticleController	mParticleController;
+	float				mZoneRadius;
 	
 	bool				mCentralGravity;
+	bool				mFlatten;
 };
 
 void TutorialApp::prepareSettings( Settings *settings )
@@ -48,7 +45,7 @@ void TutorialApp::setup()
 {	
 
 	mCentralGravity = false;
-    
+	mZoneRadius		= 30.0f;
     
     //define the camera
     mCameraDistance = 500.0f;
@@ -69,10 +66,13 @@ void TutorialApp::setup()
     // We tell Params that we want it control the mSceneRotation variable...during runtime!
     // It expects the addr in memory of the variable...that's what & is.
     // So, it will include an arc-ball in the scene.
-    mParams.addParam( "Scene Rotation", &mSceneRotation );
-    mParams.addParam( "Eye Distance", &mCameraDistance, "min=50.0 max=1000.0 step=50.0 keyIncr=s keyDecr=w" );
+    mParams.addParam( "Scene Rotation", &mSceneRotation, "opened=1" );
+    mParams.addSeparator();
+    mParams.addParam( "Eye Distance", &mCameraDistance, "min=50.0 max=1500.0 step=50.0 keyIncr=s keyDecr=w" );
     mParams.addParam( "Center Gravity", &mCentralGravity, "keyIncr=g" );
-    
+	mParams.addParam( "Flatten", &mFlatten, "keyIncr=f" );
+	mParams.addSeparator();
+	mParams.addParam( "Zone Radius", &mZoneRadius, "min=10.0 max=100.0 step=1.0 keyIncr=z keyDecr=Z" );    
     
     // CREATE PARTICLE CONTROLLER
 	mParticleController.addParticles( NUM_INITIAL_PARTICLES );
@@ -80,7 +80,12 @@ void TutorialApp::setup()
     
 }
 
-
+void TutorialApp::keyDown( KeyEvent event )
+{
+	if( event.getChar() == 'p' ){
+		mParticleController.addParticles( NUM_PARTICLES_TO_SPAWN );
+	}
+}
 
 void TutorialApp::update()
 {
@@ -95,19 +100,34 @@ void TutorialApp::update()
 	gl::rotate( mSceneRotation );
 	
 	// UPDATE PARTICLE CONTROLLER
+    mParticleController.applyForce( mZoneRadius );    
 	if( mCentralGravity ) mParticleController.pullToCenter( mCenter );
-	mParticleController.update();
+    
+	mParticleController.update( mFlatten );
 }
 
 void TutorialApp::draw()
 {	
-	gl::clear( Color( 0, 0, 0.01f ), true );
+	gl::clear( Color( 0, 0, 0 ), true );
 	gl::enableDepthRead();
 	gl::enableDepthWrite();
 	
 	// DRAW PARTICLES
-	glColor4f( ColorA( 1.0f, 1.0f, 1.0f, 1.0f ) );
 	mParticleController.draw();
+	
+	// DRAW ZONE DIAGRAM
+	gl::disableDepthRead();
+	gl::disableDepthWrite();
+	gl::setMatricesWindow( getWindowSize() );
+	gl::pushModelView();
+        gl::translate( Vec3f( 117.0f, getWindowHeight() - 117.0f, 0.0f ) );
+        
+        gl::color( ColorA( 0.25f, 0.25f, 1.0f, 1.0f ) );
+        gl::drawSolidCircle( Vec2f::zero(), mZoneRadius );
+        
+        gl::color( ColorA( 1.0f, 1.0f, 1.0f, 0.25f ) );
+        gl::drawStrokedCircle( Vec2f::zero(), 100.0f );
+	gl::popModelView();
 	
 	// DRAW PARAMS WINDOW
 	params::InterfaceGl::draw();
