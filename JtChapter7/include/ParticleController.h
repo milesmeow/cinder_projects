@@ -6,9 +6,13 @@ class ParticleController {
 public:
 	ParticleController();
 	void pullToCenter( const ci::Vec3f &center );
-	void update();
+	void applyForce( float zoneRadiusSqrd );
+    void update( bool flatten );
 	void draw();
 	void addParticles( int amt );
 	
 	std::list<Particle>	mParticles;
+    
+    
+    
 };
