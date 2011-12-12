@@ -11,6 +11,8 @@
 using namespace ci;
 using namespace ci::app;
 
+//Flocking Tutorial JTChapter7 (aka Flocking Chapter 2)
+
 class TutorialApp : public AppBasic {
  public:
 	void prepareSettings( Settings *settings );
@@ -63,7 +65,7 @@ void TutorialApp::setup()
     
     
     // Initialize the Params object
-    mParams = params::InterfaceGl( "Flocking", Vec2i( 225, 200 ) );
+    mParams = params::InterfaceGl( "Flocking", Vec2i( 225, 240 ) );
     // We tell Params that we want it control the mSceneRotation variable...during runtime!
     // It expects the addr in memory of the variable...that's what & is.
     // So, it will include an arc-ball in the scene.
@@ -101,7 +103,7 @@ void TutorialApp::update()
 	gl::rotate( mSceneRotation );
 	
 	// UPDATE PARTICLE CONTROLLER
-    mParticleController.applyForce( mZoneRadius );    
+    mParticleController.applyForce( mZoneRadius * mZoneRadius );    
 	if( mCentralGravity ) mParticleController.pullToCenter( mCenter );
     
 	mParticleController.update( mFlatten );

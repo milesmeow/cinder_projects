@@ -15,6 +15,8 @@ using namespace ci;
 using namespace ci::app;
 using namespace std;
 
+//Basic Tutorial JTChapter4 (aka Hello Chapter 4)
+
 class TutorialApp : public AppBasic {
     
 public:

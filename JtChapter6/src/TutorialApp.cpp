@@ -17,6 +17,8 @@ using std::stringstream;
 using namespace ci;
 using namespace ci::app;
 
+//Flocking Tutorial JTChapter6 (aka Flocking Chapter 1)
+
 class TutorialApp : public AppBasic {
  public:
 	void prepareSettings( Settings *settings );

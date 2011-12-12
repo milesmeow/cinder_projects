@@ -11,6 +11,8 @@
 using namespace ci;
 using namespace ci::app;
 
+//Flocking Tutorial JTChapter8 (aka Flocking Chapter 3)
+
 class TutorialApp : public AppBasic {
  public:
 	void prepareSettings( Settings *settings );

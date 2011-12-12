@@ -8,6 +8,8 @@ using namespace ci;
 using namespace ci::app;
 using namespace std;
 
+//Basic Tutorial JTChapter1 (aka Hello Chapter 1)
+
 class JtChapterOneApp : public AppBasic {
     gl::Texture myImage;
     ParticleController myPController;
