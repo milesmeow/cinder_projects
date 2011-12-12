@@ -30,9 +30,11 @@ class TutorialApp : public AppBasic {
 	
 	ParticleController	mParticleController;
 	float				mZoneRadius;
+    float               mThresh;
 	
 	bool				mCentralGravity;
 	bool				mFlatten;
+
 };
 
 void TutorialApp::prepareSettings( Settings *settings )
@@ -44,9 +46,10 @@ void TutorialApp::prepareSettings( Settings *settings )
 void TutorialApp::setup()
 {	
 
-	mCentralGravity = false;
-    mFlatten = false;
-	mZoneRadius		= 30.0f;
+	mCentralGravity = true;
+    mFlatten        = true; //makes it easy to see the effects in 2D...while we are experimenting
+	mZoneRadius		= 65.0f;
+    mThresh         = 0.65f;
     
     //define the camera
     mCameraDistance = 500.0f;
@@ -59,11 +62,11 @@ void TutorialApp::setup()
     // (2) aspect ratio of the application window
     // (3) near clipping plane
     // (4) far clipping plane
-    mCam.setPerspective( 60.0f, getWindowAspectRatio(), 5.0f, 3000.0f ); 
+    mCam.setPerspective( 75.0f, getWindowAspectRatio(), 50.0f, 2000.0f ); 
     
     
     // Initialize the Params object
-    mParams = params::InterfaceGl( "Flocking", Vec2i( 225, 200 ) );
+    mParams = params::InterfaceGl( "Flocking", Vec2i( 200, 240 ) );
     // We tell Params that we want it control the mSceneRotation variable...during runtime!
     // It expects the addr in memory of the variable...that's what & is.
     // So, it will include an arc-ball in the scene.
@@ -73,7 +76,8 @@ void TutorialApp::setup()
     mParams.addParam( "Center Gravity", &mCentralGravity, "keyIncr=g" );
 	mParams.addParam( "Flatten", &mFlatten, "keyIncr=f" );
 	mParams.addSeparator();
-	mParams.addParam( "Zone Radius", &mZoneRadius, "min=10.0 max=100.0 step=1.0 keyIncr=z keyDecr=Z" );    
+	mParams.addParam( "Zone Radius", &mZoneRadius, "min=10.0 max=100.0 step=1.0 keyIncr=z keyDecr=Z" );
+	mParams.addParam( "Thresh", &mThresh, "min=0.025 max=1.0 step=0.025 keyIncr=t keyDecr=T" );    
     
     // CREATE PARTICLE CONTROLLER
 	mParticleController.addParticles( NUM_INITIAL_PARTICLES );
@@ -101,7 +105,7 @@ void TutorialApp::update()
 	gl::rotate( mSceneRotation );
 	
 	// UPDATE PARTICLE CONTROLLER
-    mParticleController.applyForce( mZoneRadius, 20.0f );    
+    mParticleController.applyForce( mZoneRadius * mZoneRadius, mThresh );    
 	if( mCentralGravity ) mParticleController.pullToCenter( mCenter );
     
 	mParticleController.update( mFlatten );
@@ -123,8 +127,11 @@ void TutorialApp::draw()
 	gl::pushModelView();
         gl::translate( Vec3f( 117.0f, getWindowHeight() - 117.0f, 0.0f ) );
         
-        gl::color( ColorA( 0.25f, 0.25f, 1.0f, 1.0f ) );
+        gl::color( ColorA( 1.0f, 0.25f, 0.25f, 1.0f ) );
         gl::drawSolidCircle( Vec2f::zero(), mZoneRadius );
+    
+        gl::color( ColorA( 0.25f, 0.25f, 1.0f, 1.0f ) );
+        gl::drawSolidCircle( Vec2f::zero(), mThresh * mZoneRadius );    
         
         gl::color( ColorA( 1.0f, 1.0f, 1.0f, 0.25f ) );
         gl::drawStrokedCircle( Vec2f::zero(), 100.0f );
