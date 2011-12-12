@@ -45,6 +45,7 @@ void TutorialApp::setup()
 {	
 
 	mCentralGravity = false;
+    mFlatten = false;
 	mZoneRadius		= 30.0f;
     
     //define the camera
