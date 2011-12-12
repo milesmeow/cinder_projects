@@ -17,7 +17,7 @@ void ParticleController::pullToCenter( const ci::Vec3f &center )
 	}
 }
 
-void ParticleController::applyForce( float zoneRadiusSqrd )
+void ParticleController::applyForce( float zoneRadiusSqrd, float  thresh )
 {
 	for( list<Particle>::iterator p1 = mParticles.begin(); p1 != mParticles.end(); ++p1 ){
         
@@ -26,13 +26,30 @@ void ParticleController::applyForce( float zoneRadiusSqrd )
 			Vec3f dir = p1->mPos - p2->mPos;
 			float distSqrd = dir.lengthSquared();
             
-			if( distSqrd <= zoneRadiusSqrd ){	// SEPARATION
-				float F = ( zoneRadiusSqrd/distSqrd - 1.0f ) * 0.01f;
-				dir.normalize();
-				dir *= F;
+			if( distSqrd <= zoneRadiusSqrd ){
                 
-				p1->mAcc += dir;
-				p2->mAcc -= dir;
+                float percent = distSqrd/zoneRadiusSqrd;
+                
+                if( percent < thresh ) { // SEPARATION
+                
+                    float F = ( zoneRadiusSqrd/distSqrd - 1.0f ) * 0.01f;
+                    dir.normalize();
+                    dir *= F;
+                    
+                    p1->mAcc += dir;
+                    p2->mAcc -= dir;
+                
+                }
+                else { // ... else ATTRACT
+                    float threshDelta = 1.0f - thresh;
+                    float adjustedPercent = ( percent - thresh )/threshDelta;
+                    float F = ( 1.0 - ( cos( adjustedPercent * M_PI*2.0f ) * -0.5f + 0.5f ) ) * 0.04f;
+					dir = dir.normalized() * F;
+					p1->mAcc -= dir;
+					p2->mAcc += dir;
+                }
+                
+                
 			}
 		}
 	}

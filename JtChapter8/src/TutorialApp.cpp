@@ -101,7 +101,7 @@ void TutorialApp::update()
 	gl::rotate( mSceneRotation );
 	
 	// UPDATE PARTICLE CONTROLLER
-    mParticleController.applyForce( mZoneRadius );    
+    mParticleController.applyForce( mZoneRadius, 20.0f );    
 	if( mCentralGravity ) mParticleController.pullToCenter( mCenter );
     
 	mParticleController.update( mFlatten );
