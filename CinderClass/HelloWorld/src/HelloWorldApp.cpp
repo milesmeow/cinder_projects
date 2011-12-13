@@ -7,7 +7,7 @@ using namespace std;
 
 class HelloWorldApp : public AppBasic {
   public:
-    void prepareSettings( Settings *settings );
+    void prepareSettings( Settings *settings ); //need to define this here because we added a function to the class below.
 	void setup();
 	void mouseDown( MouseEvent event );	
 	void update();
