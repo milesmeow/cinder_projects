@@ -34,10 +34,16 @@ void BouncyApp::mouseDown( MouseEvent event )
 {
 }
 
+// We use the main app's update() function to:
+//
+//  (1) prepare for drawing to the screen...update variables for locations, visual states, etc.
+//  (2) call the update() function of our objects
+//
 void BouncyApp::update()
 {
     mBall.update();
 }
+
 
 void BouncyApp::draw()
 {
