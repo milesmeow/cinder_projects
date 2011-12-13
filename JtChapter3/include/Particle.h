@@ -17,7 +17,7 @@
 class Particle {
 public:
 	Particle();
-	Particle( ci::Vec2f );
+	Particle( ci::Vec2f loc );
 	void update( const ci::Channel32f &channel, const ci::Channel32f &rChan, const ci::Channel32f &gChan, const ci::Channel32f &bChan, const ci::Vec2i &mouseLoc );
 	void draw();
 	

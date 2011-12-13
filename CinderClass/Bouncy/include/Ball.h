@@ -6,12 +6,17 @@
 //  Copyright 2011 __MyCompanyName__. All rights reserved.
 //
 
-#ifndef Bouncy_Ball_h
-#define Bouncy_Ball_h
+#pragma once
 
 class Ball {
 public:
 	Ball();
-};
+	Ball( ci::Vec2f loc, ci::Vec2f vel );    
+	void update();
+	void draw();
+	
+    //float		mRadius;
 
-#endif
+	ci::Vec2f   mLoc;
+	ci::Vec2f   mVel;
+};
