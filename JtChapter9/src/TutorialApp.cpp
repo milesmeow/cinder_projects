@@ -81,8 +81,9 @@ void TutorialApp::setup()
 	mParams.addParam( "Flatten", &mFlatten, "keyIncr=f" );
 	mParams.addSeparator();
 	mParams.addParam( "Zone Radius", &mZoneRadius, "min=10.0 max=100.0 step=1.0 keyIncr=z keyDecr=Z" );
+	mParams.addParam( "HighThresh", &mHighThresh, "min=0.025 max=1.0 step=0.025 keyIncr=h keyDecr=H" );
 	mParams.addParam( "LowThresh", &mLowThresh, "min=0.025 max=1.0 step=0.025 keyIncr=l keyDecr=L" );    
-	mParams.addParam( "HighThresh", &mHighThresh, "min=0.025 max=1.0 step=0.025 keyIncr=h keyDecr=H" );        
+        
     
     // CREATE PARTICLE CONTROLLER
 	mParticleController.addParticles( NUM_INITIAL_PARTICLES );
