@@ -5,7 +5,7 @@
 #include "cinder/Camera.h"
 #include "cinder/params/Params.h"
 
-#define NUM_INITIAL_PARTICLES 250
+#define NUM_INITIAL_PARTICLES 550
 #define NUM_PARTICLES_TO_SPAWN 15
 
 using namespace ci;
@@ -32,7 +32,8 @@ class TutorialApp : public AppBasic {
 	
 	ParticleController	mParticleController;
 	float				mZoneRadius;
-    float               mThresh;
+    float               mLowThresh;
+    float               mHighThresh;    
 	
 	bool				mCentralGravity;
 	bool				mFlatten;
@@ -51,7 +52,8 @@ void TutorialApp::setup()
 	mCentralGravity = true;
     mFlatten        = true; //makes it easy to see the effects in 2D...while we are experimenting
 	mZoneRadius		= 65.0f;
-    mThresh         = 0.65f;
+    mHighThresh      = 0.85f;
+    mLowThresh      = 0.65f;
     
     //define the camera
     mCameraDistance = 500.0f;
@@ -79,7 +81,8 @@ void TutorialApp::setup()
 	mParams.addParam( "Flatten", &mFlatten, "keyIncr=f" );
 	mParams.addSeparator();
 	mParams.addParam( "Zone Radius", &mZoneRadius, "min=10.0 max=100.0 step=1.0 keyIncr=z keyDecr=Z" );
-	mParams.addParam( "Thresh", &mThresh, "min=0.025 max=1.0 step=0.025 keyIncr=t keyDecr=T" );    
+	mParams.addParam( "LowThresh", &mLowThresh, "min=0.025 max=1.0 step=0.025 keyIncr=l keyDecr=L" );    
+	mParams.addParam( "HighThresh", &mHighThresh, "min=0.025 max=1.0 step=0.025 keyIncr=h keyDecr=H" );        
     
     // CREATE PARTICLE CONTROLLER
 	mParticleController.addParticles( NUM_INITIAL_PARTICLES );
@@ -107,7 +110,7 @@ void TutorialApp::update()
 	gl::rotate( mSceneRotation );
 	
 	// UPDATE PARTICLE CONTROLLER
-    mParticleController.applyForce( mZoneRadius * mZoneRadius, mThresh );    
+    mParticleController.applyForce( mZoneRadius * mZoneRadius, mLowThresh, mHighThresh);    
 	if( mCentralGravity ) mParticleController.pullToCenter( mCenter );
     
 	mParticleController.update( mFlatten );
@@ -132,8 +135,12 @@ void TutorialApp::draw()
         gl::color( ColorA( 1.0f, 0.25f, 0.25f, 1.0f ) );
         gl::drawSolidCircle( Vec2f::zero(), mZoneRadius );
     
+        gl::color( ColorA( 0.25f, 1.0f, 0.25f, 1.0f ) );
+        gl::drawSolidCircle( Vec2f::zero(), mHighThresh * mZoneRadius );    
+
+    
         gl::color( ColorA( 0.25f, 0.25f, 1.0f, 1.0f ) );
-        gl::drawSolidCircle( Vec2f::zero(), mThresh * mZoneRadius );    
+        gl::drawSolidCircle( Vec2f::zero(), mLowThresh * mZoneRadius );    
         
         gl::color( ColorA( 1.0f, 1.0f, 1.0f, 0.25f ) );
         gl::drawStrokedCircle( Vec2f::zero(), 100.0f );

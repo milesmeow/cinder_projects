@@ -17,7 +17,7 @@ void ParticleController::pullToCenter( const ci::Vec3f &center )
 	}
 }
 
-void ParticleController::applyForce( float zoneRadiusSqrd, float  thresh )
+void ParticleController::applyForce( float zoneRadiusSqrd, float lowThresh, float highThresh )
 {
 	for( list<Particle>::iterator p1 = mParticles.begin(); p1 != mParticles.end(); ++p1 ){
         
@@ -30,7 +30,7 @@ void ParticleController::applyForce( float zoneRadiusSqrd, float  thresh )
                 
                 float percent = distSqrd/zoneRadiusSqrd;
                 
-                if( percent < thresh ) { // SEPARATION
+                if( percent < lowThresh ) { // SEPARATION
                 
                     float F = ( zoneRadiusSqrd/distSqrd - 1.0f ) * 0.01f;
                     dir.normalize();
@@ -40,15 +40,21 @@ void ParticleController::applyForce( float zoneRadiusSqrd, float  thresh )
                     p2->mAcc -= dir;
                 
                 }
+                else if( percent < highThresh ) { // if it's within the higher threshold limits, ALIGN
+                    float threshDelta = highThresh - lowThresh;
+                    float adjustedPercent = ( percent - lowThresh )/threshDelta;
+                    float F = ( 0.5f - cos( adjustedPercent * M_PI * 2.0f ) * 0.5f + 0.5f ) * 0.01f;
+                    p1->mAcc += p2->mVel.normalized() * F;
+                    p2->mAcc += p1->mVel.normalized() * F;
+                }
                 else { // ... else ATTRACT
-                    float threshDelta = 1.0f - thresh;
-                    float adjustedPercent = ( percent - thresh )/threshDelta;
+                    float threshDelta = 1.0f - lowThresh;
+                    float adjustedPercent = ( percent - lowThresh )/threshDelta;
                     float F = ( 1.0 - ( cos( adjustedPercent * M_PI*2.0f ) * -0.5f + 0.5f ) ) * 0.04f;
 					dir = dir.normalized() * F;
 					p1->mAcc -= dir;
 					p2->mAcc += dir;
-                }
-                
+                }                
                 
 			}
 		}
